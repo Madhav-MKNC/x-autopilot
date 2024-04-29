@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import databank
+import utils
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -35,31 +35,31 @@ class Scraper:
         self.news_items = self.soup.find_all('article')
     
     def __save(self) -> None:
-        databank.add(self.news_data)
+        utils.add_to_databank(self.news_data)
 
     def fetch(self) -> list:
         self.news_data = []
         for item in self.news_items:
             title_element = item.find('a', title=True)
             description_element = item.find('p')
-
             if title_element and description_element:
                 title = title_element['title']
                 link = title_element['href']
                 description = description_element.text.strip()
-
-                self.news_data.append({
+                news_item = {
                     'title': title,
                     'link': link,
                     'description': description
-                })
+                }
+                if news_item not in self.news_data:
+                    self.news_data.append(news_item)
         self.__save()
         return self.news_data
     
     def save_this(self, filename: str = "") -> None:
         if not filename.strip():
             # filename = f'databank/{str(uuid4())}.json'
-            filename = url.split('.')[1] + ".json"
+            filename = f"databank/{url.split('.')[1]}.json"
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(self.news_data, file, ensure_ascii=False, indent=4)
 
