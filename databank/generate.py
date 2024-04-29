@@ -55,4 +55,5 @@ def generate_posts(databank: list) -> list:
         print("Done.")
     
     add_to_posts(posts)
+    return posts
 
