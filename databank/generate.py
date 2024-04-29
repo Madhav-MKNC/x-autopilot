@@ -3,6 +3,8 @@
 
 from openai import OpenAI, OpenAIError
 
+from utils import add_to_posts
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -24,10 +26,9 @@ def synthesize_post(context="") -> str:
         },
         {
             'role': 'user',
-            'content': f"Please create a simple short tweet out of the following text without deleting anything and keeping the whole tweet under 250 characters. Content: {context}"
+            'content': f"Please create a simple short tweet out of the following text without deleting anything and keeping the whole tweet under 250 characters. Tweet should not contain any emojis or other special characters. Content: {context}"
         }
     ]
-
     try:
         response = openai_client.chat.completions.create(
             messages=prompt,
@@ -35,7 +36,23 @@ def synthesize_post(context="") -> str:
         )
         output = response.choices[0].message.content
         return output
-
     except OpenAIError as e:
         print('\033[31m*** get_gpt_response():', str(e), "\033[m")
         return ""
+
+
+def generate_posts(databank: list) -> list:
+    posts = []
+    try:
+        for i, article in enumerate(databank):
+            title = article['title']
+            content = article['content']
+            print(f"\n[{i+1}] Generating for- {title}")
+            post = synthesize_post(context=content)
+            posts.append(post)
+            print(post)
+    except KeyboardInterrupt:
+        print("Done.")
+    
+    add_to_posts(posts)
+

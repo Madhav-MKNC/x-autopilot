@@ -7,6 +7,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import time
 
+from databank.utils import pop_from_posts
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -14,7 +16,7 @@ load_dotenv()
 
 # for headless browser
 options = Options()
-# options.add_argument('--headless')
+options.add_argument('--headless')
 # options.add_argument('--disable-gpu')
 # options.add_argument('--no-sandbox')
 # options.add_argument('--disable-dev-shm-usage')
@@ -58,60 +60,27 @@ def login_to_twitter():
 #     time.sleep(2)
 
 
-# def post_tweet(tweet_text):
-#     driver.get('https://twitter.com/home')
-#     time.sleep(5)
-
-#     try:
-#         compose_box = driver.find_element(By.XPATH, "//div[@data-testid='tweetTextarea_0' and contains(@class,'public-DraftEditor-content')]")
-#         compose_box.click()
-#         time.sleep(2)
-#     except Exception as e:
-#         print("Error finding compose tweet box:", e)
-#         return
-
-#     try:
-#         compose_box.send_keys(tweet_text)
-#         time.sleep(2)
-#         tweet_button = driver.find_element(By.XPATH, "//div[@data-testid='tweetButtonInline']")
-#         tweet_button.click()
-#         time.sleep(5)
-#     except Exception as e:
-#         print("Error Tweeting", e)
-#         return
-
-
-
 def post_tweet(tweet_text):
     driver.get('https://twitter.com/home')
-    time.sleep(5)  # Allow time for the page to fully load
+    time.sleep(5)
 
-    # Activate the tweet box
     try:
         compose_box = driver.find_element(By.XPATH, "//div[@data-testid='tweetTextarea_0' and contains(@class,'public-DraftEditor-content')]")
-        driver.execute_script("arguments[0].click();", compose_box)
+        compose_box.click()
         time.sleep(2)
     except Exception as e:
-        print("Error activating tweet box:", e)
+        print("Error finding compose tweet box:", e)
         return
 
-    # Set the tweet text using JavaScript
     try:
-        driver.execute_script("arguments[0].textContent = arguments[1];", compose_box, tweet_text)
+        compose_box.send_keys(tweet_text)
         time.sleep(2)
-    except Exception as e:
-        print("Error setting tweet text via JavaScript:", e)
-        return
-
-    # Find and click the tweet button
-    try:
         tweet_button = driver.find_element(By.XPATH, "//div[@data-testid='tweetButtonInline']")
         tweet_button.click()
         time.sleep(5)
     except Exception as e:
-        print("Error clicking tweet button:", e)
+        print("Error Tweeting", e)
         return
-
 
 
 def main():
@@ -123,13 +92,7 @@ def main():
         print(str(e))
         exit()
     
-    from databank import utils
-    from databank.generate import synthesize_post
-    
-    content = utils.pop_from_databank()
-    print('content:', content)
-    print("Synthesizing post...")
-    tweet_text = synthesize_post(context=content)
+    tweet_text = pop_from_posts()
     print("post:", tweet_text)
     
     try:

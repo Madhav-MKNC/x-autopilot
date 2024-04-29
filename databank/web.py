@@ -49,7 +49,8 @@ class Scraper:
                 news_item = {
                     'title': title,
                     'link': link,
-                    'description': description
+                    'description': description,
+                    'content': f"Title: {title}\n\n{description}"
                 }
                 if news_item not in self.news_data:
                     self.news_data.append(news_item)
