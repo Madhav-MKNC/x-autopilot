@@ -56,17 +56,19 @@ class Scraper:
         self.__save()
         return self.news_data
     
-    def save_this(self) -> None:
-        uuid = str(uuid4())
-        with open(f'databank/{uuid4}.json', 'w', encoding='utf-8') as file:
+    def save_this(self, filename: str = "") -> None:
+        if not filename.strip():
+            # filename = f'databank/{str(uuid4())}.json'
+            filename = url.split('.')[1] + ".json"
+        with open(filename, 'w', encoding='utf-8') as file:
             json.dump(self.news_data, file, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
-    URL = "https://www.artificialintelligence-news.com"
     
-    scraper = Scraper(url=URL)
-    scraper.fetch()
-    scraper.save_this()
+    for url in URLS:
+        scraper = Scraper(url)
+        scraper.fetch()
+        # scraper.save_this()
 
     
