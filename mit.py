@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
 import requests
 from bs4 import BeautifulSoup
 
-URL = "https://www.perplexity.ai/discover"
+URL = "https://news.mit.edu/topic/machine-learning"
 
 # headers for get request
 HEADERS = {
@@ -16,6 +15,8 @@ response = requests.get(URL)
 
 print(response.text)
 
+with open('mit.html', 'w', encoding="utf-8") as file:
+    file.write(response.text)
 
 # get urls for the articles from the articles-base-url
 def fetch_articles_perplexity_discover(url):
