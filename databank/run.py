@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from web import Scraper, URLS
+from web import Scraper, URLS_1
 from generate import generate_posts
 from utils import read_databank
 
 
-for url in URLS:
+for url in URLS_1:
     print("* Scraping", url)
-    Scraper(url).fetch()
+    Scraper(url=url, source=1).fetch()
 
 
 databank = read_databank()
