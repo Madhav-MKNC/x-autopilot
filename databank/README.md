@@ -12,8 +12,9 @@ The bot will post one tweet based on a new article from the databank everyday un
 
 ## Working
 
-- <code>fetch.py</code> - News articles are fetched manually from sources and are stored in JSON format.
+- <code>web.py</code> - News articles are fetched manually from sources and are stored in JSON format.
 - <code>generate.py</code> - Generate posts using an LLM with prompt and the news articles as context.
 - Generated posts are stored in <code>'databank-{current_month}.json'</code>.
-- <code>__init__.py</code> - This script manages the databank i.e, pops the content from 'databank-{current_month}.json'.
+- <code>utils.py</code> - This script manages the databank i.e, pops the content from 'databank-{current_month}.json'.
+- <code>run.py</code> - main executing file for the databank.
 
